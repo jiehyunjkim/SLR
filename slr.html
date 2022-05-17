@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sea Level Rise</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<div id="textArea"></div>
+
+<p class="a">DEADLINE TIME LEFT SEA LEVEL TO BE INCREASED 10MM</p>
+
+<body onload="startClock()">
+<div id="txt"></div>
+
+<style>
+  body {
+    background-image: url('background.png');
+    background-repeat: no-repeat;
+    background-attachment: fixed; 
+    background-size: 45% 18%;
+  }
+  p.a {
+  font: 22.5px Arial, sans-serif;
+  color: red;
+  line-height: 30%;
+  }
+
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script type="text/javascript">
+
+
+$(document).ready(function() {
+    $.ajax({
+        type: "GET",
+        //url: "http://uhslc.soest.hawaii.edu/data/csv/rqds/atlantic/daily/d740a.csv",
+        url: "d741a.csv",
+        dataType: "text",
+        success: function(data) {processData(data);}
+     });
+});
+
+function processData(allText) {
+    var allTextLines = allText.split(/\r\n|\n/);
+    var headers = allTextLines[0].split(',');
+    const result = allTextLines.slice(1).reduce((sum, arr) => {
+            arr.split(',').forEach((v, i) => {
+                sum[i] = (sum[i] || 0) + Number(v.trim());
+            })
+            return sum;}, []);
+        //console.log(result[4]/36035);
+    var lines = [];
+
+    for (var i=1; i<allTextLines.length; i++) {
+        var data = allTextLines[i].split(',');
+        if (data.length == headers.length) {
+
+            var tarr = [];
+            for (var j=0; j<headers.length; j++) {
+                tarr.push(data[j]);
+            }
+            //lines.push(tarr);
+        }
+    }
+    //sum of slr = result[4]
+    //total data = 36035
+    var daily_increase_rate = result[4]/36035
+    //console.log(daily_increase_rate);
+    //2022/01/01 - 2022/05/12: 132 days
+    var today = (daily_increase_rate * 365 * 2) + (daily_increase_rate * 132);
+    //console.log(today);
+
+    var date1 = new Date("01/01/2020");
+    var date2 = new Date("05/13/2024");
+  
+    // To calculate the time difference of two dates
+    var Difference_In_Time = date2.getTime() - date1.getTime();
+      
+    // To calculate the no. of days between two dates
+    var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+    //console.log(Difference_In_Days);
+
+    var mm = daily_increase_rate * Difference_In_Days;
+    //console.log(mm);
+}
+
+
+function startClock(){
+    var last_date = new Date(2024, 05, 13, 00, 00, 00).getTime();
+
+    var my_date = new Date().getTime();
+    var time_left = last_date - my_date;
+
+    var second = Math.floor(time_left / 1000);
+    var minute = Math.floor(second / 60);
+    second = second % 60;
+    var hour = Math.floor(minute / 60);
+    minute = minute % 60;
+    var day = Math.floor(hour / 24);
+    hour = hour % 24;
+    var year = Math.floor(day/365);
+    var day = day % 365;
+
+    hour = hour < 10 ? "0" + hour : hour;
+    minute = minute < 10 ? "0" + minute : minute;
+    second = second < 10 ? "0" + second : second;
+
+    document.getElementById("txt").style.fontSize = "55px";
+    document.getElementById("txt").style.fontFamily = "Arial";
+    document.getElementById("txt").style.fontWeight = "Bold";
+    document.getElementById("txt").style.textAlign = "50px";
+    document.getElementById('txt').innerHTML =  
+    "&nbsp;"+year+" Year "+ day +" Day "+ hour +":"+ minute +":"+second;
+    setTimeout(startClock, 1000);
+}
+
+function checkTime(i) {
+  if (i < 10) {i = "0" + i};
+  return i;
+}
+</script>
+<meta charset="EUC-KR">
+</body>
+</html>
