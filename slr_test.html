@@ -29,15 +29,17 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script type="text/javascript">
 
+
 $(document).ready(function() {
     $.ajax({
         type: "GET",
+        //url: "http://uhslc.soest.hawaii.edu/data/csv/rqds/atlantic/daily/d741a.csv",
+        //url: "https://www.cs.umb.edu/~jiehyun/d741a.csv",
         url:"d741a.csv",
         dataType: "text",
         success: function(data) {processData(data);}
      });
 });
-
 
 function processData(allText) {
     var allTextLines = allText.split(/\r\n|\n/);
@@ -65,11 +67,15 @@ function processData(allText) {
     //total data = 36035
     var daily_increase_rate = result[4]/36035
     //console.log(daily_increase_rate);
-   
+    //2022/01/01 - 2022/05/12: 132 days
+    //var today = (daily_increase_rate * 365 * 2) + (daily_increase_rate * 132);
+    //console.log(today);
     var days_till_10mm = 10 / daily_increase_rate;
     //console.log(Math.round(days_till_10mm));
     //days_till_10mm = 1594
-   
+    //10mm of sea level increase 1594 days after 2020-01-01
+    //365*4 = 1460, 365*5 = 1825, so it will be around 4 year+days
+    //182days(half of year) -> 1460+182 = 1642 -> it will be less than 6 month
     var years = Math.round(days_till_10mm / 365);
     //console.log(years);
     var days_left = (days_till_10mm - 1460);
@@ -82,14 +88,25 @@ function processData(allText) {
     var final_year = 2020 + years;
     //console.log(final_year);
     var final_month = 01 + month;
-    //console.log(final_month);
     var final_day = 01 + days;
-    //console.log(final_day);
+    var full_date = final_year+final_month+final_day;
 
     var date1 = new Date(2020, 01, 01, 00, 00, 00);
-    var date2 = new Date(final_year, final_month-1, final_day, 00, 00, 00);
+    //var date2 = new Date(final_year, final_month-1, final_day, 00, 00, 00);
     var date2 = new Date(2024, 05, 13, 00, 00, 00);
-    console.log("date2: "+date2);
+    //console.log("date1: "+date1);
+    //console.log("date2: "+date2);
+
+    // To calculate the time difference of two dates
+    var Difference_In_Time = date2.getTime() - date1.getTime();
+    //console.log(Difference_In_Time);
+      
+    // To calculate the no. of days between two dates
+    var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+    //console.log(Math.round(Difference_In_Days));
+
+    var mm = daily_increase_rate * Difference_In_Days;
+    //console.log(Math.round(mm));
     
     return date2;
 }
@@ -98,6 +115,7 @@ function processData(allText) {
 function startClock(){
     //var last_date = new Date(2024, 05, 13, 00, 00, 00).getTime();
     var last_date = processData("d741a.csv").getTime();
+    //console.log(last_date);
 
     var my_date = new Date().getTime();
     var time_left = last_date - my_date;
