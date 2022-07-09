@@ -5,135 +5,134 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-<div id="textArea"></div>
+    <div id="textArea"></div>
 
-<p class="a">DEADLINE TIME LEFT SEA LEVEL TO BE INCREASED 10MM</p>
+    <p class="a">DEADLINE TIME LEFT SEA LEVEL TO BE INCREASED 10MM</p>
 
-<body onload= "startClock()">
-<div id="txt"></div>
-<style>
-  body {
-    background-image: url('background.png');
-    background-repeat: no-repeat;
-    background-attachment: fixed; 
-    background-size: 45% 18%;
-  }
-  p.a {
-  font: 22.5px Arial, sans-serif;
-  color: red;
-  line-height: 30%;
-  }
+    <body onload= "startClock()">
+        <div id="txt"></div>
+        <style>
+          body {
+            background-image: url('background.png');
+            background-repeat: no-repeat;
+            background-attachment: fixed; 
+            background-size: 45% 18%;
+          }
+          p.a {
+          font: 22.5px Arial, sans-serif;
+          color: red;
+          line-height: 30%;
+          }
 
-</style>
+        </style>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-<script type="text/javascript">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script type="text/javascript">
+        var last_date = '';
+        $(document).ready(function() {
+            $.ajax({
+                type: "GET",
+                url:"d741a.csv",
+                dataType: "text",
+                success: function(data) {processData(data);}
+             });
+        });
 
-$(document).ready(function() {
-    var last_date = '';
-    $.ajax({
-        type: "GET",
-        url:"d741a.csv",
-        dataType: "text",
-        success: function(data) {processData(data);}
-     });
-});
 
+        function processData(allText) {
+            var allTextLines = allText.split(/\r\n|\n/);
+            var headers = allTextLines[0].split(',');
+            const result = allTextLines.slice(1).reduce((sum, arr) => {
+                    arr.split(',').forEach((v, i) => {
+                        sum[i] = (sum[i] || 0) + Number(v.trim());
+                    })
+                    return sum;}, []);
+                //console.log(result[4]/36035);
+            var lines = [];
 
-function processData(allText) {
-    var allTextLines = allText.split(/\r\n|\n/);
-    var headers = allTextLines[0].split(',');
-    const result = allTextLines.slice(1).reduce((sum, arr) => {
-            arr.split(',').forEach((v, i) => {
-                sum[i] = (sum[i] || 0) + Number(v.trim());
-            })
-            return sum;}, []);
-        //console.log(result[4]/36035);
-    var lines = [];
+            for (var i=1; i<allTextLines.length; i++) {
+                var data = allTextLines[i].split(',');
+                if (data.length == headers.length) {
 
-    for (var i=1; i<allTextLines.length; i++) {
-        var data = allTextLines[i].split(',');
-        if (data.length == headers.length) {
-
-            var tarr = [];
-            for (var j=0; j<headers.length; j++) {
-                tarr.push(data[j]);
+                    var tarr = [];
+                    for (var j=0; j<headers.length; j++) {
+                        tarr.push(data[j]);
+                    }
+                    //lines.push(tarr);
+                }
             }
-            //lines.push(tarr);
+            //sum of slr = result[4]
+            //total data = 36035
+            var daily_increase_rate = result[4]/36035
+            //console.log(daily_increase_rate);
+           
+            var days_till_10mm = 10 / daily_increase_rate;
+            //console.log(Math.round(days_till_10mm));
+            //days_till_10mm = 1594
+           
+            var years = Math.round(days_till_10mm / 365);
+            //console.log(years);
+            var days_left = (days_till_10mm - 1460);
+            //console.log(days_left);
+            var month = Math.round(days_left / 30);
+            //console.log(month);
+            var days = Math.round(days_left - 122);
+            //console.log(days);
+            
+            var final_year = 2020 + years;
+            //console.log(final_year);
+            var final_month = 01 + month;
+            //console.log(final_month);
+            var final_day = 01 + days;
+            //console.log(final_day);
+
+            //var date1 = new Date(2020, 01, 01, 00, 00, 00);
+            var date2 = new Date(final_year, final_month-1, final_day, 00, 00, 00);
+            //var date2 = new Date(2024, 05, 13, 00, 00, 00);
+            //console.log("date1: "+date1);
+            //console.log("date2: "+date2);
+            last_date = date2.getTime();
+            return date2;
         }
-    }
-    //sum of slr = result[4]
-    //total data = 36035
-    var daily_increase_rate = result[4]/36035
-    //console.log(daily_increase_rate);
-   
-    var days_till_10mm = 10 / daily_increase_rate;
-    //console.log(Math.round(days_till_10mm));
-    //days_till_10mm = 1594
-   
-    var years = Math.round(days_till_10mm / 365);
-    //console.log(years);
-    var days_left = (days_till_10mm - 1460);
-    //console.log(days_left);
-    var month = Math.round(days_left / 30);
-    //console.log(month);
-    var days = Math.round(days_left - 122);
-    //console.log(days);
-    
-    var final_year = 2020 + years;
-    //console.log(final_year);
-    var final_month = 01 + month;
-    //console.log(final_month);
-    var final_day = 01 + days;
-    //console.log(final_day);
-
-    //var date1 = new Date(2020, 01, 01, 00, 00, 00);
-    var date2 = new Date(final_year, final_month-1, final_day, 00, 00, 00);
-    //var date2 = new Date(2024, 05, 13, 00, 00, 00);
-    //console.log("date1: "+date1);
-    //console.log("date2: "+date2);
-    last_date = date2.getTime();
-    return date2;
-}
 
 
-function startClock() {
-        if (last_date) {
+        function startClock() {
+                if (last_date) {
 
-          //console.log("date2: " + last_date);
-          var my_date = new Date().getTime();
-          var time_left = last_date - my_date;
+                  //console.log("date2: " + last_date);
+                  var my_date = new Date().getTime();
+                  var time_left = last_date - my_date;
 
-          var second = Math.floor(time_left / 1000);
-          var minute = Math.floor(second / 60);
-          second = second % 60;
-          var hour = Math.floor(minute / 60);
-          minute = minute % 60;
-          var day = Math.floor(hour / 24);
-          hour = hour % 24;
-          var year = Math.floor(day / 365);
-          var day = day % 365;
+                  var second = Math.floor(time_left / 1000);
+                  var minute = Math.floor(second / 60);
+                  second = second % 60;
+                  var hour = Math.floor(minute / 60);
+                  minute = minute % 60;
+                  var day = Math.floor(hour / 24);
+                  hour = hour % 24;
+                  var year = Math.floor(day / 365);
+                  var day = day % 365;
 
-          hour = hour < 10 ? "0" + hour : hour;
-          minute = minute < 10 ? "0" + minute : minute;
-          second = second < 10 ? "0" + second : second;
+                  hour = hour < 10 ? "0" + hour : hour;
+                  minute = minute < 10 ? "0" + minute : minute;
+                  second = second < 10 ? "0" + second : second;
 
-          document.getElementById("txt").style.fontSize = "55px";
-          document.getElementById("txt").style.fontFamily = "Arial";
-          document.getElementById("txt").style.fontWeight = "Bold";
-          document.getElementById("txt").style.textAlign = "50px";
-          document.getElementById('txt').innerHTML =
-            "&nbsp;" + year + " Year " + day + " Day " + hour + ":" + minute + ":" + second;
+                  document.getElementById("txt").style.fontSize = "55px";
+                  document.getElementById("txt").style.fontFamily = "Arial";
+                  document.getElementById("txt").style.fontWeight = "Bold";
+                  document.getElementById("txt").style.textAlign = "50px";
+                  document.getElementById('txt').innerHTML =
+                    "&nbsp;" + year + " Year " + day + " Day " + hour + ":" + minute + ":" + second;
+                }
+                setTimeout(startClock, 1000);
         }
-        setTimeout(startClock, 1000);
-}
 
-function checkTime(i) {
-  if (i < 10) {i = "0" + i};
-  return i;
-}
+        function checkTime(i) {
+          if (i < 10) {i = "0" + i};
+          return i;
+        }
 
-</script>
-<meta charset="EUC-KR">
-</body>
+        </script>
+        <meta charset="EUC-KR">
+    </body>
 </html>
