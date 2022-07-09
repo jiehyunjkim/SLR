@@ -9,11 +9,11 @@
 
 <p class="a">DEADLINE TIME LEFT SEA LEVEL TO BE INCREASED 10MM</p>
 
-<body onload="startClock()">
+<body onload= "startClock()">
 <div id="txt"></div>
 <style>
   body {
-    background-image: url('https://www.cs.umb.edu/~jiehyun/background.png');
+    background-image: url('background.png');
     background-repeat: no-repeat;
     background-attachment: fixed; 
     background-size: 45% 18%;
@@ -30,6 +30,7 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
+    var last_date = '';
     $.ajax({
         type: "GET",
         url:"d741a.csv",
@@ -86,43 +87,45 @@ function processData(allText) {
     var final_day = 01 + days;
     //console.log(final_day);
 
-    var date1 = new Date(2020, 01, 01, 00, 00, 00);
+    //var date1 = new Date(2020, 01, 01, 00, 00, 00);
     var date2 = new Date(final_year, final_month-1, final_day, 00, 00, 00);
-    var date2 = new Date(2024, 05, 13, 00, 00, 00);
-    console.log("date2: "+date2);
-    
+    //var date2 = new Date(2024, 05, 13, 00, 00, 00);
+    //console.log("date1: "+date1);
+    //console.log("date2: "+date2);
+    last_date = date2.getTime();
     return date2;
 }
 
 
-function startClock(){
-    //var last_date = new Date(2024, 05, 13, 00, 00, 00).getTime();
-    var last_date = processData("d741a.csv").getTime();
+function startClock() {
+        if (last_date) {
 
-    var my_date = new Date().getTime();
-    var time_left = last_date - my_date;
+          //console.log("date2: " + last_date);
+          var my_date = new Date().getTime();
+          var time_left = last_date - my_date;
 
-    var second = Math.floor(time_left / 1000);
-    var minute = Math.floor(second / 60);
-    second = second % 60;
-    var hour = Math.floor(minute / 60);
-    minute = minute % 60;
-    var day = Math.floor(hour / 24);
-    hour = hour % 24;
-    var year = Math.floor(day/365);
-    var day = day % 365;
+          var second = Math.floor(time_left / 1000);
+          var minute = Math.floor(second / 60);
+          second = second % 60;
+          var hour = Math.floor(minute / 60);
+          minute = minute % 60;
+          var day = Math.floor(hour / 24);
+          hour = hour % 24;
+          var year = Math.floor(day / 365);
+          var day = day % 365;
 
-    hour = hour < 10 ? "0" + hour : hour;
-    minute = minute < 10 ? "0" + minute : minute;
-    second = second < 10 ? "0" + second : second;
+          hour = hour < 10 ? "0" + hour : hour;
+          minute = minute < 10 ? "0" + minute : minute;
+          second = second < 10 ? "0" + second : second;
 
-    document.getElementById("txt").style.fontSize = "55px";
-    document.getElementById("txt").style.fontFamily = "Arial";
-    document.getElementById("txt").style.fontWeight = "Bold";
-    document.getElementById("txt").style.textAlign = "50px";
-    document.getElementById('txt').innerHTML =  
-    "&nbsp;"+year+" Year "+ day +" Day "+ hour +":"+ minute +":"+second;
-    setTimeout(startClock, 1000);
+          document.getElementById("txt").style.fontSize = "55px";
+          document.getElementById("txt").style.fontFamily = "Arial";
+          document.getElementById("txt").style.fontWeight = "Bold";
+          document.getElementById("txt").style.textAlign = "50px";
+          document.getElementById('txt').innerHTML =
+            "&nbsp;" + year + " Year " + day + " Day " + hour + ":" + minute + ":" + second;
+        }
+        setTimeout(startClock, 1000);
 }
 
 function checkTime(i) {
