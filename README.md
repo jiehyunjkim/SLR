@@ -4,5 +4,6 @@ Create a web banner clock that counts the time when 10mm of sea-level increase f
 ### Install prerequisites
 Make sure you have git and yarn for your system.
 
-## Get the code
-```git clone 
+### Get the code
+```git clone git@github.com:jiehyunjkim/SLR.git
+```cd SLR
