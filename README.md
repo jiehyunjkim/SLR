@@ -9,7 +9,7 @@ Make sure you have git and brew for your system.
 git clone git@github.com:jiehyunjkim/SLR.git
 cd SLR
 ```
-Or you can download as a zip file
+Or you can download the zip file.
 
 ### Install the home-brew if you do not have one
 ```
@@ -23,4 +23,4 @@ brew install http-server
 ```
 python3 -m http.server
 ```
-Once built, the clock widget can see the clock on the web
+Once built, the clock widget can see the clock on the web.
