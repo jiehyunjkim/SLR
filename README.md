@@ -12,6 +12,9 @@ cd SLR
 #### Install the home-brew if you do not have one
 ```
 bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+#### Install the server
+```
 brew install http-server
 ```
 #### Test your build on http://localhost:8000/slr.html
